@@ -1,6 +1,7 @@
 import express, { json } from "express";
 import cors from "cors";
 import bcrypt from 'bcrypt';
+import { v4 } from "uuid";
 import joi from "joi";
 import chalk from "chalk";
 import dotenv from "dotenv";
@@ -67,7 +68,7 @@ app.post("/sign-up", async (req, res) => {
         description: joi.string(),
     })
 
-    const validation = userSchema.validate(user, {abortEarly: false});
+    const validation = userSchema.validate(user, { abortEarly: false });
 
     if (validation.error) {
         res.status(422).send("Preencha todos os campos corretamente");
@@ -96,11 +97,34 @@ app.post("/sign-up", async (req, res) => {
         }
 
     } catch (e) {
+        console.log(e);
         res.sendStatus(500);
     }
 
 })
 
+app.post("/sign-in", async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+
+        const user = await db.collection("users").findOne({ email });
+
+        if (user && bcrypt.compareSync(password, user.password)) {
+            const token = v4();
+            await db.collection("sessions").insertOne({
+                userId: user._id,
+                token
+            })
+            res.send(token);
+        } else {
+            res.status(422).send("Senha e/ou usuário incorretos");
+        }
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+})
 
 const port = 5000 || process.env.PORT;
 app.listen(port, () => console.log(chalk.green.bold("Servidor rodando")));
