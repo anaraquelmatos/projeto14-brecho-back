@@ -5,7 +5,7 @@ import { v4 } from "uuid";
 import joi from "joi";
 import chalk from "chalk";
 import dotenv from "dotenv";
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 
 const app = express();
 app.use(json());
@@ -120,6 +120,19 @@ app.post("/sign-in", async (req, res) => {
         } else {
             res.status(422).send("Senha e/ou usuário incorretos");
         }
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+})
+
+app.get("/", async (req, res) => {
+
+    try{
+    const products = await db.collection("products").find().toArray();
+
+    res.send(products)
+
     } catch (e) {
         console.log(e);
         res.sendStatus(500);
