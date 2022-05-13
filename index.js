@@ -26,14 +26,6 @@ app.post("/sign-up", async (req, res) => {
         password,
         passwordConfirmation,
         CPF,
-        phone,
-        UF,
-        CEP,
-        city,
-        neighborhood,
-        street,
-        number,
-        description
     } = req.body;
 
     const user = {
@@ -41,15 +33,7 @@ app.post("/sign-up", async (req, res) => {
         email,
         password,
         passwordConfirmation,
-        CPF,
-        phone,
-        UF,
-        CEP,
-        city,
-        neighborhood,
-        street,
-        number,
-        description
+        CPF
     }
 
     const userSchema = joi.object({
@@ -58,14 +42,6 @@ app.post("/sign-up", async (req, res) => {
         password: joi.string().min(6).max(10).required(),
         passwordConfirmation: joi.string().required(),
         CPF: joi.string().min(11).max(11).required(),
-        phone: joi.string().required(),
-        UF: joi.string().min(2).max(2).required(),
-        CEP: joi.string().min(8).max(8).required(),
-        city: joi.string().required(),
-        neighborhood: joi.string().required(),
-        street: joi.string().required(),
-        number: joi.string().required(),
-        description: joi.string(),
     })
 
     const validation = userSchema.validate(user, { abortEarly: false });
