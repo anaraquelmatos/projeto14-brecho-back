@@ -128,10 +128,25 @@ app.post("/sign-in", async (req, res) => {
 
 app.get("/", async (req, res) => {
 
-    try{
-    const products = await db.collection("products").find().toArray();
+    try {
+        const products = await db.collection("products").find().toArray();
 
-    res.send(products)
+        res.send(products)
+
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+})
+
+app.get("/product/:idProduct", async (req, res) => {
+
+    const { idProduct } = req.params;
+
+    try {
+
+        const product = await db.collection("products").findOne({ id: parseInt(idProduct) });
+        res.send(product);
 
     } catch (e) {
         console.log(e);
