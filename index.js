@@ -34,7 +34,7 @@ app.post("/sign-up", async (req, res) => {
         password,
         passwordConfirmation,
         CPF
-    }
+    };
 
     const userSchema = joi.object({
         name: joi.string().required(),
@@ -70,6 +70,7 @@ app.post("/sign-up", async (req, res) => {
             res.sendStatus(201);
         } else {
             res.status(409).send("Usuário já cadastrado");
+            return;
         }
 
     } catch (e) {
@@ -95,6 +96,7 @@ app.post("/sign-in", async (req, res) => {
             res.send(token);
         } else {
             res.status(422).send("Senha e/ou usuário incorretos");
+            return;
         }
     } catch (e) {
         console.log(e);
@@ -123,6 +125,61 @@ app.get("/product/:idProduct", async (req, res) => {
 
         const product = await db.collection("products").findOne({ id: parseInt(idProduct) });
         res.send(product);
+
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+})
+
+app.put("/address", async (req, res) => {
+
+    const { CPF, CEP, street, numberHouse, neighborhood, UF, city, reference } = req.body;
+
+    const { authorization } = req.headers;
+    const token = authorization?.replace("Bearer", "").trim();
+    if (!token) {
+        return res.sendStatus(401);
+    }
+
+    const userAddress = {
+        CEP,
+        street,
+        numberHouse,
+        neighborhood,
+        UF,
+        city,
+        reference
+    }
+
+    const userSchema = joi.object({
+        CEP: joi.string().required(),
+        street: joi.string().required(),
+        numberHouse: joi.string().required(),
+        neighborhood: joi.string().required(),
+        UF: joi.string().min(2).max(2).required(),
+        city: joi.string().required(),
+        reference: joi.string()
+    })
+
+    const { error } = userSchema.validate(userAddress, { abortEarly: false });
+
+    if (error) {
+        res.status(422).send("Preencha todos os campos corretamente");
+        return;
+    }
+
+    try {
+        const user = await db.collection("users").findOne({ CPF });
+        if (!user) return res.status(404).send("CPF não cadastrado!");
+
+        await db.collection("users").updateOne({
+            _id: new ObjectId(user._id)
+        },
+            { $set: userAddress })
+
+        res.send(userAddress);
+
 
     } catch (e) {
         console.log(e);
