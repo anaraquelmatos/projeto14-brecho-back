@@ -8,6 +8,7 @@ import { rootController } from "./controllers/rootController.js";
 import { productController } from "./controllers/productController.js";
 import { addressController } from "./controllers/addressController.js";
 import { paymentController } from "./controllers/paymentController.js";
+import {adminController} from "./controllers/adminController.js";
 
 const app = express();
 app.use(json());
@@ -25,6 +26,8 @@ app.get("/product/:idProduct", productController);
 app.put("/address", addressController);
 
 app.get("/payment", paymentController);
+
+app.post("/admin", adminController);
 
 const port = 5000 || process.env.PORT;
 app.listen(port, () => console.log(chalk.green.bold("Servidor rodando")));
