@@ -1,6 +1,5 @@
 import express, { json } from "express";
 import cors from "cors";
-import joi from "joi";
 import chalk from "chalk";
 import dotenv from "dotenv";
 import { signUpController } from "./controllers/signUpController.js";
