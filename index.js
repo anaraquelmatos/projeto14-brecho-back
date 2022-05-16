@@ -124,6 +124,7 @@ app.get("/product/:idProduct", async (req, res) => {
     try {
 
         const product = await db.collection("products").findOne({ id: parseInt(idProduct) });
+        if (!product) return res.sendStatus(401);
         res.send(product);
 
     } catch (e) {
