@@ -23,12 +23,8 @@ export async function adminController(req, res) {
         storePrice,
         price,
         discount,
-        quantity: [
-            {
-                size,
-                color
-            }
-        ],
+        size,
+        color,
         description,
         collection,
         brand,
@@ -38,7 +34,7 @@ export async function adminController(req, res) {
     try {
 
         const user = await db.collection("users").findOne({ email: 'admin@gmail.com' });
-        await db.collection("products").insertOne({...register});
+        await db.collection("products").insertOne({ ...register });
         res.send(register);
 
     } catch (e) {
