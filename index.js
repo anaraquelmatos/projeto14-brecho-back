@@ -21,6 +21,8 @@ app.post("/sign-in", signInController);
 
 app.get("/", rootController);
 
+app.delete("/:id", rootController);
+
 app.get("/product/:idProduct", productController);
 
 app.put("/address", addressController);
