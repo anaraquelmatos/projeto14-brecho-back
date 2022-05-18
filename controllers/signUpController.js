@@ -26,7 +26,7 @@ export async function signUpController(req, res) {
         name: joi.string().required(),
         email: joi.string().email().required(),
         password: joi.string().min(6).max(10).required(),
-        passwordConfirmation: joi.string().required(),
+        passwordConfirmation: joi.string().min(6).max(10).required(),
         CPF: joi.string().min(11).max(11).required(),
     })
 
