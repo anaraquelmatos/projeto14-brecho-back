@@ -3,8 +3,8 @@ import { paymentController, savePaymentController } from "../controllers/payment
 
 const paymentRouter = Router();
 
-paymentRouter.get("/", paymentController);
+paymentRouter.get("/payment", paymentController);
 
-paymentRouter.post("/:id", savePaymentController);
+paymentRouter.post("/payment", savePaymentController);
 
 export default paymentRouter;
